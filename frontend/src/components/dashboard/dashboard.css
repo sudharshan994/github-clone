@@ -1,5 +1,120 @@
 #dashboard {
     display: flex;
-    width: 1080px;
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    box-sizing: border-box;
     justify-content: space-between;
+    gap: 24px;
+    text-align: left;
+}
+
+#dashboard aside {
+    flex: 0 1 230px;
+}
+
+#dashboard main {
+    flex: 1;
+    min-width: 0;
+}
+
+#dashboard aside > div,
+#dashboard main > div:not(#search) {
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin: 10px 0;
+}
+.repository-card h4 { margin: 0 0 6px; }
+.repository-card a { color: #58a6ff; text-decoration: none; }
+.repository-card p { margin: 0 0 6px; color: #8b949e; }
+
+#search input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    margin: 10px 0 16px;
+}
+
+.dashboard-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.create-repository-link,
+.repository-form-actions button {
+    background: #2da44e;
+    color: white;
+    border: 0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    text-decoration: none;
+}
+
+.empty-state {
+    color: #8b949e;
+}
+
+.repository-form-page {
+    width: min(680px, calc(100% - 40px));
+    margin: 40px auto;
+    text-align: left;
+}
+
+.repository-form-help {
+    color: #8b949e;
+}
+
+.repository-form {
+    display: grid;
+    gap: 10px;
+    margin-top: 28px;
+}
+
+.repository-form input:not([type="checkbox"]),
+.repository-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+}
+
+.repository-form label span {
+    color: #8b949e;
+}
+
+.visibility-option {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.repository-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.repository-form-actions a {
+    color: inherit;
+}
+
+.form-error {
+    color: #f85149;
+}
+
+@media (max-width: 800px) {
+    #dashboard {
+        flex-direction: column;
+    }
+    #dashboard aside {
+        flex-basis: auto;
+    }
 }

@@ -14,7 +14,9 @@ const Navbar = () => {
                 </div>
             </Link>
             <div>
-                <p title="Repository creation is not implemented in this client yet">Create a Repository</p>
+                <Link to="/repo/new">
+                    <p>Create a Repository</p>
+                </Link>
                 <Link to="/profile">
                     <p>Profile</p>
                 </Link>

@@ -1,0 +1,10 @@
+# Environment and secret configuration
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+
+# Local Git-like repository metadata
+.apnaGit/
+.sudhagit/

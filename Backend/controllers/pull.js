@@ -14,14 +14,13 @@ async function pullRepo() {
             })
             .promise();
 
-        const objects = data.Contents;
+        const objects = data.Contents || [];
 
         for (const object of objects) {
             const key = object.Key;
-            const commitDir = path.join(
-                commitsPath,
-                path.dirname(key).split("/").pop()
-            );
+            const commitDirName = key.split("/")[1];
+            if (!commitDirName) continue;
+            const commitDir = path.join(commitsPath, commitDirName);
 
             await fs.mkdir(commitDir, { recursive: true });
 
@@ -31,7 +30,7 @@ async function pullRepo() {
             };
 
             const fileContent = await s3.getObject(params).promise();
-            await fs.writeFile(path.join(repoPath, key), fileContent.Body);
+            await fs.writeFile(path.join(commitDir, path.basename(key)), fileContent.Body);
 
             console.log("All commits pulled from S3.");
         }
