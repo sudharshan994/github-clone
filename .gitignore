@@ -1,0 +1,8 @@
+# Environment and secret configuration
+.env
+.env.*
+!.env.example
+
+# Local Git-like repository metadata
+.apnaGit/
+.sudhagit/

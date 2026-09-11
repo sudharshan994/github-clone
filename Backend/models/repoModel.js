@@ -17,6 +17,7 @@ const RepositorySchema = new Schema({
     ],
     visibility: {
         type: Boolean,
+        default: true,
     },
     owner: {
         type: Schema.Types.ObjectId,

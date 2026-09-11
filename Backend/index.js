@@ -4,6 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const http = require("http");
+const dns = require("dns");
 const { Server } = require("socket.io");
 const mainRouter = require("./routes/main.router");
 
@@ -18,6 +19,14 @@ const { pullRepo } = require("./controllers/pull");
 const { revertRepo } = require("./controllers/revert");
 
 dotenv.config();
+
+const dnsServers = (process.env.DNS_SERVERS || "8.8.8.8,1.1.1.1")
+    .split(",")
+    .map((server) => server.trim())
+    .filter(Boolean);
+if (dnsServers.length > 0) {
+    dns.setServers(dnsServers);
+}
 
 yargs(hideBin(process.argv))
     .command("start", "Starts a new server", {}, startServer)
@@ -82,7 +91,9 @@ function startServer() {
     mongoose
         .connect(mongoURI, { serverSelectionTimeoutMS: 10000 })
         .then(() => console.log("MongoDB connected!"))
-        .catch((err) => console.error("Unable to connect : ", err));
+        .catch((err) => {
+            console.error("Unable to connect to MongoDB. Check MONGODB_URI, network access, and DNS settings.", err.message);
+        });
 
     const allowedOrigin = process.env.CLIENT_ORIGIN;
     app.use(cors({ origin: allowedOrigin ? allowedOrigin.split(",") : true }));
@@ -108,6 +119,14 @@ function startServer() {
     db.once("open", async () => {
         console.log("CRUD operations called");
         // CRUD operations
+    });
+
+    httpServer.on("error", (err) => {
+        if (err.code === "EADDRINUSE") {
+            console.error(`Port ${port} is already in use. Stop the existing process or set a different PORT in .env.`);
+            return;
+        }
+        console.error("Unable to start server:", err.message);
     });
 
     httpServer.listen(port, () => {

@@ -42,6 +42,9 @@
     border-radius: 10px;
     color: whitesmoke;
 }
+.profile-note { color: #8b949e; text-align: center; }
+.profile-repositories { margin-top: 30px; }
+.profile-repositories .repo-card-wrapper { justify-content: flex-start; padding: 10px 0; }
 
 .follower {
     display: flex;

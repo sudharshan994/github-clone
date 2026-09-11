@@ -14,11 +14,13 @@ const Signup = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const { setCurrentUser } = useAuth();
 
     const handleSignup = async (e) => {
         e.preventDefault();
+        setError("");
 
         try {
             setLoading(true);
@@ -33,8 +35,8 @@ const Signup = () => {
 
             setCurrentUser(res.data.userId);
             window.location.href = "/";
-        } catch {
-            alert("Signup Failed!");
+        } catch (requestError) {
+            setError(requestError.response?.data?.message || "Unable to create your account. Check the backend connection.");
         } finally {
             setLoading(false);
         }
@@ -57,7 +59,7 @@ const Signup = () => {
                     </div>
                 </div>
 
-                <div className="login-box">
+                <form className="login-box" onSubmit={handleSignup}>
                     <div>
                         <label className="label">Username</label>
                         <input
@@ -66,6 +68,8 @@ const Signup = () => {
                             id="Username"
                             className="input"
                             type="text"
+                            minLength={3}
+                            required
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                         />
@@ -79,6 +83,7 @@ const Signup = () => {
                             id="Email"
                             className="input"
                             type="email"
+                            required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
@@ -92,6 +97,8 @@ const Signup = () => {
                             id="Password"
                             className="input"
                             type="password"
+                            minLength={8}
+                            required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
@@ -101,11 +108,12 @@ const Signup = () => {
                         variant="primary"
                         className="login-btn"
                         disabled={loading}
-                        onClick={handleSignup}
+                        type="submit"
                     >
                         {loading ? "Loading..." : "Signup"}
                     </Button>
-                </div>
+                    {error && <p className="form-error" role="alert">{error}</p>}
+                </form>
 
                 <div className="pass-box">
                     <p>

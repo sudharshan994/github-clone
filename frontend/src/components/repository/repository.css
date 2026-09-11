@@ -1,0 +1,18 @@
+.repository-detail { width: min(1000px, calc(100% - 40px)); margin: 32px auto; text-align: left; }
+.repository-detail a { color: #58a6ff; }
+.repository-header { display: flex; justify-content: space-between; gap: 20px; border-bottom: 1px solid #30363d; padding: 24px 0; }
+.repository-header h1 { margin: 0; }
+.visibility, .issue-status { font-size: .75rem; border: 1px solid #8b949e; border-radius: 20px; padding: 3px 8px; color: #8b949e; vertical-align: middle; }
+.repository-actions, .issue-card > div:last-child { display: flex; gap: 8px; align-items: center; }
+.repository-detail button { border: 1px solid #30363d; background: #21262d; color: inherit; border-radius: 6px; padding: 7px 12px; cursor: pointer; }
+.repository-detail button:disabled { opacity: .6; cursor: wait; }
+.repository-detail .danger { color: #f85149; }
+.issues-section { margin-top: 28px; }
+.issues-section h2 span { color: #8b949e; font-weight: normal; }
+.issue-form { display: grid; gap: 10px; margin: 16px 0; }
+.issue-form input, .issue-form textarea { background: transparent; color: inherit; border: 1px solid #30363d; border-radius: 6px; padding: 10px; font: inherit; }
+.issue-card { display: flex; justify-content: space-between; gap: 20px; border: 1px solid #30363d; border-radius: 6px; padding: 16px; margin: 10px 0; }
+.issue-card h3 { margin: 0 0 8px; }
+.issue-card p { color: #8b949e; white-space: pre-wrap; }
+.issue-status.open { color: #3fb950; } .issue-status.closed { color: #a371f7; }
+@media (max-width: 700px) { .repository-header, .issue-card { display: block; } .repository-actions, .issue-card > div:last-child { margin-top: 16px; flex-wrap: wrap; } }

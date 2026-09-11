@@ -7,10 +7,16 @@ import { BookIcon, RepoIcon } from "@primer/octicons-react";
 import HeatMapProfile from "./HeatMap";
 import { useAuth } from "../../authContext";
 import { apiUrl } from "../../api";
+import { authHeaders } from "../../api";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
     const [userDetails, setUserDetails] = useState({ username: "username" });
     const { setCurrentUser } = useAuth();
+    const [repositories, setRepositories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [following, setFollowing] = useState(false);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -18,12 +24,15 @@ const Profile = () => {
 
             if (userId) {
                 try {
-                    const response = await axios.get(
-                        apiUrl(`/userProfile/${userId}`)
-                    );
+                    const response = await axios.get(apiUrl(`/userProfile/${userId}`), { headers: authHeaders() });
                     setUserDetails(response.data);
+                    const repos = await axios.get(apiUrl(`/repo/user/${userId}`), { headers: authHeaders() });
+                    setRepositories(repos.data.repositories || []);
+                    setFollowing((response.data.followedUsers || []).includes(userId));
                 } catch {
-                    // The profile keeps its safe placeholder when the request fails.
+                    setError("Unable to load your profile.");
+                } finally {
+                    setLoading(false);
                 }
             }
         };
@@ -60,7 +69,7 @@ const Profile = () => {
                         },
                     }}
                 >
-                    Starred Repositories (coming soon)
+                    Starred Repositories
                 </UnderlineNav.Item>
             </UnderlineNav>
 
@@ -86,7 +95,16 @@ const Profile = () => {
                         <h3>{userDetails.username}</h3>
                     </div>
 
-                    <button className="follow-btn">Follow</button>
+                    {userDetails._id !== localStorage.getItem("userId") && <button className="follow-btn" aria-pressed={following} onClick={async () => {
+                        try {
+                            const response = await axios.patch(apiUrl(`/userProfile/${userDetails._id}/follow`), {}, { headers: authHeaders() });
+                            setFollowing(response.data.following);
+                        } catch {
+                            setError("Unable to update follow status.");
+                        }
+                    }}>
+                        {following ? "Following" : "Follow"}
+                    </button>}
 
                     <div className="follower">
                         <p>10 Follower</p>
@@ -96,6 +114,21 @@ const Profile = () => {
 
                 <div className="heat-map-section">
                     <HeatMapProfile />
+                    <section className="profile-repositories">
+                        <h2>Repositories</h2>
+                        {loading && <p className="empty-state">Loading repositories...</p>}
+                        {error && <p className="form-error" role="alert">{error}</p>}
+                        {!loading && repositories.length === 0 && !error && <p className="empty-state">No repositories yet.</p>}
+                        <div className="repo-card-wrapper">
+                            {repositories.map((repo) => (
+                                <article className="repo" key={repo._id}>
+                                    <Link className="repo-name" to={`/repo/${repo._id}`}>{repo.name}</Link>
+                                    <p className="description">{repo.description || "No description provided."}</p>
+                                    <small>{repo.visibility ? "Public" : "Private"}</small>
+                                </article>
+                            ))}
+                        </div>
+                    </section>
                 </div>
             </div>
         </>
